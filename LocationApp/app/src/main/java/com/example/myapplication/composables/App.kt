@@ -49,7 +49,7 @@ fun App() {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Location: $latitude, $longitude")
-        Text(text = "Weather: ${weather?.temperature ?: "Not available"}°C")    }
+        Text(text = "Weather: ${weather?.current ?: "Not available"}°C")    }
 }
 
 

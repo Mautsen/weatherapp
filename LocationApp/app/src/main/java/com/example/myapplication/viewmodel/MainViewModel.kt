@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.LocationRepository
 import com.example.myapplication.model.WeatherRepository
-import com.example.myapplication.model.WeatherResponse
+import com.example.myapplication.model.CurrentWeatherResponse
 import kotlinx.coroutines.launch
 
 
@@ -20,8 +20,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _location = MutableLiveData<Location?>()
     val location: LiveData<Location?> = _location
 
-    private val _weather = MutableLiveData<WeatherResponse>()
-    val weather: LiveData<WeatherResponse> = _weather
+    private val _weather = MutableLiveData<CurrentWeatherResponse>()
+    val weather: LiveData<CurrentWeatherResponse> = _weather
 
     init {
         startLocationUpdates()
