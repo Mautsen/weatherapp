@@ -31,11 +31,13 @@ class WeatherRepository {
     }
 
     suspend fun getWeather(latitude: Double, longitude: Double): CurrentWeatherResponse {
-
-        val weatherResponse = openMeteoApi.getWeather(latitude, longitude, "temperature_2m") // Päivitetty parametri current
+        val currentParam = "temperature_2m,weather_code"
+        val weatherResponse = openMeteoApi.getWeather(latitude, longitude, currentParam)
+        Log.d("WeatherResponse", "Weather code: ${weatherResponse.current.weatherCode}")
         Log.d("WeatherResponse", "Current temperature: ${weatherResponse.current.temperature}")
         return weatherResponse
     }
+
 
 }
 

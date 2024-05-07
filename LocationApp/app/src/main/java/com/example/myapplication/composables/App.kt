@@ -46,10 +46,16 @@ fun App() {
     val latitude = location?.latitude ?: "Not available"
     val longitude = location?.longitude ?: "Not available"
 
+    val temperature = weather?.current?.temperature ?: "Not available"
+
+    val weatherCode = weather?.current?.weatherCode ?: "Not available"
+
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Location: $latitude, $longitude")
-        Text(text = "Weather: ${weather?.current ?: "Not available"}°C")    }
+        Text(text = "Weather: ${temperature}°C")
+        Text(text = "Weather Code: $weatherCode")
+    }
 }
 
 

@@ -7,5 +7,6 @@ data class CurrentWeatherResponse(
 )
 
 data class Current(
-    @SerializedName("temperature_2m") val temperature: Double
+    @SerializedName("temperature_2m") val temperature: Double,
+    @SerializedName("weather_code") val weatherCode: Int
 )
