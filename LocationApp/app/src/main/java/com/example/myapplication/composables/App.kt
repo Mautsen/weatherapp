@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,8 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.example.myapplication.R
 import androidx.compose.foundation.layout.size
-
-
+import com.example.myapplication.ui.theme.Typography
+import com.example.myapplication.ui.theme.valeraRound
 
 
 @Composable
@@ -77,18 +79,24 @@ fun App() {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Location: $latitude, $longitude")
-        Text(text = "Weather: ${temperature}°C")
         Text(text = "Weather Code: $weatherCode")
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Text(text = "${temperature}°C",
+                style = valeraRound,
+                )
+            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = imageResId),
                 contentDescription = "My Image",
                 modifier = Modifier.size(100.dp)
             )
         }
+
+
     }
 }
 

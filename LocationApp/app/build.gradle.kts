@@ -73,7 +73,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.1") // LiveData support for Compose
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")// ViewModel support for Compose
-
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
 
 
 }
