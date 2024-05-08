@@ -1,8 +1,6 @@
 package com.example.myapplication.ui.theme
 
-import android.provider.CalendarContract
 import androidx.compose.material3.Typography
-
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow

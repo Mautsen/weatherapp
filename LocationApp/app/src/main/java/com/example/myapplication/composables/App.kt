@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import com.example.myapplication.R
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.example.myapplication.ui.theme.Typography
 import com.example.myapplication.ui.theme.valeraRound
 
@@ -52,6 +56,7 @@ fun App() {
         ))
     }
 
+    var isDataLoading by remember { mutableStateOf(true) }
     val locationState = viewModel.location.observeAsState()
     val weatherState = viewModel.weather.observeAsState()
 
@@ -76,27 +81,37 @@ fun App() {
         else -> R.drawable.default_image
     }
 
+    // isDataLoading is true if location or weather are null
+    // It's false if they are not null so the data has loaded
+    LaunchedEffect(location, weather) {
+        isDataLoading = location == null || weather == null
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Location: $latitude, $longitude")
         Text(text = "Weather Code: $weatherCode")
-        Column(modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Text(text = "${temperature}°C",
-                style = valeraRound,
-                )
-            Spacer(modifier = Modifier.height(20.dp))
-            Image(
-                painter = painterResource(id = imageResId),
-                contentDescription = "My Image",
-                modifier = Modifier.size(100.dp)
-            )
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            if (isDataLoading) {
+                CircularProgressIndicator() // This gets called if isDataLoading is true
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${temperature}°C",
+                        style = valeraRound
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Image(
+                        painter = painterResource(id = imageResId),
+                        contentDescription = "My Image",
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
+            }
         }
-
-
     }
 }
 
