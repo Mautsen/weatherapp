@@ -127,7 +127,7 @@ fun App() {
                         val weatherCode = dailyForecast.daily.weatherCodes[index]
                         val dayImageResId = getWeatherImageResId(weatherCode)
 
-                        Text(text = "Day ${index + 1}: Weather Code $weatherCode, Max $maxTemperature°C, Min $minTemperature°C", modifier = Modifier.padding(8.dp))
+                        Text(text = "$day: Weather Code $weatherCode, Max $maxTemperature°C, Min $minTemperature°C", modifier = Modifier.padding(8.dp))
 
                         Image(
                             painter = painterResource(id = dayImageResId),
