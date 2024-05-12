@@ -32,6 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.myapplication.ui.theme.Typography
 import com.example.myapplication.ui.theme.valeraRound
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun getWeatherImageResId(weatherCode: Int): Int {
@@ -121,13 +123,16 @@ fun App() {
                         contentDescription = "My Image",
                         modifier = Modifier.size(100.dp)
                     )
-                    dailyForecast?.daily?.time?.forEachIndexed { index, day ->
+
+                    dailyForecast?.daily?.time?.forEachIndexed { index, dateString ->
+                        val date = LocalDate.parse(dateString)
+                        val formattedDate = date.format(DateTimeFormatter.ofPattern("d.M."))
                         val maxTemperature = dailyForecast.daily.maxTemperatures[index]
                         val minTemperature = dailyForecast.daily.minTemperatures[index]
                         val weatherCode = dailyForecast.daily.weatherCodes[index]
                         val dayImageResId = getWeatherImageResId(weatherCode)
 
-                        Text(text = "$day: Weather Code $weatherCode, Max $maxTemperature°C, Min $minTemperature°C", modifier = Modifier.padding(8.dp))
+                        Text(text = "$formattedDate Max $maxTemperature°C, Min $minTemperature°C", modifier = Modifier.padding(8.dp))
 
                         Image(
                             painter = painterResource(id = dayImageResId),
