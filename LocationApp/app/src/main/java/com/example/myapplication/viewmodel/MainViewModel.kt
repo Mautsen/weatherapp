@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.LocationRepository
 import com.example.myapplication.model.WeatherRepository
 import com.example.myapplication.model.CurrentWeatherResponse
+import com.example.myapplication.model.DailyForecastResponse
 import kotlinx.coroutines.launch
 
 
@@ -23,6 +24,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _weather = MutableLiveData<CurrentWeatherResponse>()
     val weather: LiveData<CurrentWeatherResponse> = _weather
 
+    private val _dailyForecast = MutableLiveData<DailyForecastResponse>()
+    val dailyForecast: LiveData<DailyForecastResponse> = _dailyForecast
+
     init {
         startLocationUpdates()
     }
@@ -32,6 +36,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             _location.value = location
             Log.i("MainViewModel", "Received location: $location")
             fetchWeather(location)
+            fetchDailyForecast(location)
         }
     }
 
@@ -43,6 +48,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     _weather.value = weather
                 } catch (e: Exception) {
                     Log.e("MainViewModel", "Error fetching weather", e)
+                }
+            }
+        }
+    }
+    private fun fetchDailyForecast(location: Location?) {
+        location?.let { loc ->
+            viewModelScope.launch {
+                try {
+                    val dailyForecast = weatherRepository.getDailyForecast(loc.latitude, loc.longitude)
+                    _dailyForecast.value = dailyForecast
+                } catch (e: Exception) {
+                    Log.e("MainViewModel", "Error fetching daily forecast", e)
                 }
             }
         }

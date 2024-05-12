@@ -17,9 +17,20 @@ interface OpenMeteoApi {
         @Query("timezone") timezone: String = "auto"
     ): CurrentWeatherResponse
 }
+// interface for 7 day forecast
+interface DailyForecastApi {
+    @GET("v1/forecast")
+    suspend fun getDailyForecast(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("daily") daily: String,
+        @Query("timezone") timezone: String = "auto"
+    ): DailyForecastResponse
+}
 
 class WeatherRepository {
     private val openMeteoApi: OpenMeteoApi
+    private val dailyForecastApi: DailyForecastApi
 
     init {
         val retrofit = Retrofit.Builder()
@@ -28,6 +39,7 @@ class WeatherRepository {
             .build()
 
         openMeteoApi = retrofit.create(OpenMeteoApi::class.java)
+        dailyForecastApi = retrofit.create(DailyForecastApi::class.java)
     }
 
     suspend fun getWeather(latitude: Double, longitude: Double): CurrentWeatherResponse {
@@ -36,6 +48,13 @@ class WeatherRepository {
         Log.d("WeatherResponse", "Weather code: ${weatherResponse.current.weatherCode}")
         Log.d("WeatherResponse", "Current temperature: ${weatherResponse.current.temperature}")
         return weatherResponse
+    }
+    suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse {
+
+        val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code"
+        val dailyResponse = dailyForecastApi.getDailyForecast(latitude, longitude, dailyParam)
+        Log.d("WeatherResponse", "Weather code: ${dailyResponse.daily.weatherCodes}")
+        return dailyResponse
     }
 
 
