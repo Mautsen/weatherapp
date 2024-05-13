@@ -14,10 +14,17 @@ import com.example.myapplication.model.DailyForecastResponse
 import kotlinx.coroutines.launch
 
 
+/**
+ * ViewModel class for the main view of the application, responsible for the background logic.
+ *
+ * @param application The application instance.
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
     private val locationRepository = LocationRepository(application)
     private val weatherRepository = WeatherRepository()
 
+    // LiveData variables for location, current weather, and daily forecast
     private val _location = MutableLiveData<Location?>()
     val location: LiveData<Location?> = _location
 
@@ -31,6 +38,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         startLocationUpdates()
     }
 
+    /**
+     * Starts location updates and triggers fetching weather and daily forecast.
+     */
     fun startLocationUpdates() {
         locationRepository.startLocationUpdates { location ->
             _location.value = location
@@ -40,6 +50,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Fetches weather based on location.
+     *
+     * @param location The location from which to fetch the weather.
+     */
     private fun fetchWeather(location: Location?) {
         location?.let { loc ->
             viewModelScope.launch {
@@ -52,6 +67,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    /**
+     * Fetches daily forecast based on location.
+     *
+     * @param location The location from which to fetch the daily forecast.
+     */
     private fun fetchDailyForecast(location: Location?) {
         location?.let { loc ->
             viewModelScope.launch {

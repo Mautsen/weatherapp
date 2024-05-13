@@ -74,6 +74,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.6.1") // LiveData support for Compose
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")// ViewModel support for Compose
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
+    implementation("androidx.compose.material3:material3:1.2.1")
 
 
 }

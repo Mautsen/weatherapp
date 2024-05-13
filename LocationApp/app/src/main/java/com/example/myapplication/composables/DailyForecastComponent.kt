@@ -44,7 +44,7 @@ fun WeatherCard(
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
+            modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "$formattedDate")
