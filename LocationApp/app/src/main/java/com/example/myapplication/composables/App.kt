@@ -136,8 +136,8 @@ fun App() {
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(2) { idx ->
-                        val resultText = "City $idx"
+                    items(2) { id ->
+                        val resultText = "City $id"
                         ListItem(
                             modifier = Modifier.clickable {
                                 text = resultText
@@ -150,7 +150,7 @@ fun App() {
                                 )
                             },
                             supportingContent = {
-                                Text("")
+                                Text("Small text here, delete if unnecessary")
                             },
                             leadingContent = {
                                 Icon(
