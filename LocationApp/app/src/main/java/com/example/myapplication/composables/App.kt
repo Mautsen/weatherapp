@@ -120,7 +120,7 @@ fun App() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.TopCenter
         ) {
-            DockedSearchBar(
+            SearchBar(
                 modifier = Modifier
                     .padding(top = 8.dp),
                 query = text,

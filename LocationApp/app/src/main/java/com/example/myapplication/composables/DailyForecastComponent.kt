@@ -16,6 +16,8 @@ import com.example.myapplication.R
 import com.example.myapplication.model.DailyForecastResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
@@ -23,18 +25,20 @@ fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
         items(dailyForecast?.daily?.time ?: emptyList()) { dateString ->
                 val date = LocalDate.parse(dateString)
                 val formattedDate = date.format(DateTimeFormatter.ofPattern("d.M."))
+                val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
                 val index = dailyForecast?.daily?.time?.indexOf(dateString) ?: 0
                 val maxTemperature = dailyForecast?.daily?.maxTemperatures?.get(index) ?: 0.0
                 val minTemperature = dailyForecast?.daily?.minTemperatures?.get(index) ?: 0.0
                 val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
 
-                WeatherCard(formattedDate, maxTemperature, minTemperature, weatherCode)
+                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode)
         }
     }
 }
 
 @Composable
 fun WeatherCard(
+    dayOfWeek: String,
     formattedDate: String,
     maxTemperature: Double,
     minTemperature: Double,
@@ -47,6 +51,7 @@ fun WeatherCard(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(text = dayOfWeek)
             Text(text = "$formattedDate")
             Text(text = "Max: $maxTemperature°C")
             Text(text = "Min: $minTemperature°C")
