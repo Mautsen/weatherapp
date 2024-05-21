@@ -1,19 +1,31 @@
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 import com.example.myapplication.model.DailyForecastResponse
+import com.example.myapplication.ui.theme.valeraRound
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -30,8 +42,9 @@ fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
                 val maxTemperature = dailyForecast?.daily?.maxTemperatures?.get(index) ?: 0.0
                 val minTemperature = dailyForecast?.daily?.minTemperatures?.get(index) ?: 0.0
                 val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
+                val uvIndex = dailyForecast?.daily?.uvIndexes?.get(index) ?: 0.0
 
-                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode)
+                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex)
         }
     }
 }
@@ -42,19 +55,31 @@ fun WeatherCard(
     formattedDate: String,
     maxTemperature: Double,
     minTemperature: Double,
-    weatherCode: Int
+    weatherCode: Int,
+    uvIndex: Double
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     ElevatedCard(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { expanded = !expanded }
+
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = dayOfWeek)
+            Text(text = dayOfWeek,
+                fontWeight = FontWeight.Bold
+            )
             Text(text = "$formattedDate")
-            Text(text = "Max: $maxTemperature°C")
-            Text(text = "Min: $minTemperature°C")
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "$maxTemperature°C",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            //Text(text = "Min: $minTemperature°C")
 
             // Show weather icon based on weatherCode
             val iconPainter = when (weatherCode) {
@@ -68,6 +93,12 @@ fun WeatherCard(
                 else -> painterResource(R.drawable.default_image)
             }
             Image(painter = iconPainter, contentDescription = "Weather Icon",  modifier = Modifier.size(80.dp))
+            AnimatedVisibility(visible = expanded) {
+                Column {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "UV: $uvIndex")
+                }
+            }
         }
     }
 }
