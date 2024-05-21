@@ -1,4 +1,7 @@
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -43,8 +46,9 @@ fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
                 val minTemperature = dailyForecast?.daily?.minTemperatures?.get(index) ?: 0.0
                 val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
                 val uvIndex = dailyForecast?.daily?.uvIndexes?.get(index) ?: 0.0
+                val rain = dailyForecast?.daily?.rainSum?.get(index) ?: 0.0
 
-                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex)
+                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex, rain)
         }
     }
 }
@@ -56,7 +60,8 @@ fun WeatherCard(
     maxTemperature: Double,
     minTemperature: Double,
     weatherCode: Int,
-    uvIndex: Double
+    uvIndex: Double,
+    rain: Double
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -76,9 +81,10 @@ fun WeatherCard(
             Text(text = "$formattedDate")
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "$maxTemperature°C",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
             )
-
+            Spacer(modifier = Modifier.height(8.dp))
             //Text(text = "Min: $minTemperature°C")
 
             // Show weather icon based on weatherCode
@@ -93,10 +99,12 @@ fun WeatherCard(
                 else -> painterResource(R.drawable.default_image)
             }
             Image(painter = iconPainter, contentDescription = "Weather Icon",  modifier = Modifier.size(80.dp))
-            AnimatedVisibility(visible = expanded) {
+            AnimatedVisibility(visible = expanded, enter = fadeIn() + expandVertically()
+                ) {
                 Column {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "UV: $uvIndex")
+                    Text(text = "Rain (mm): $rain")
                 }
             }
         }
