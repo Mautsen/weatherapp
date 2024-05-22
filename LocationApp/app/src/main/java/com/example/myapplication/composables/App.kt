@@ -54,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import com.example.myapplication.ui.theme.Typography
+import com.example.myapplication.ui.theme.antonRegular
 import com.example.myapplication.ui.theme.valeraRound
 
 

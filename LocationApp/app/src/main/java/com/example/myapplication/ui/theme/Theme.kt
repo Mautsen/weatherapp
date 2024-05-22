@@ -50,9 +50,9 @@ private val LightColorScheme = lightColorScheme(
 
 fun Modifier.gradientBackground(): Modifier {
     val gradient = Brush.linearGradient(
-        colors = listOf(Color(0xff6dcee4), Color(0xff4730d8)),
-        start = androidx.compose.ui.geometry.Offset(250f, 0f),
-        end = androidx.compose.ui.geometry.Offset(2500f, 1000f) // Gradient direction
+        colors = listOf(Color(0xffDCD6F1), Color(0xff4946CC)),
+        start = androidx.compose.ui.geometry.Offset(200f, 0f),
+        end = androidx.compose.ui.geometry.Offset(2000f, 1500f) // Gradient direction
     )
     return this
         .background(gradient)

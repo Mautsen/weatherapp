@@ -141,7 +141,7 @@ fun WeatherCard(
                                 modifier = Modifier.size(32.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = ": $uvIndex")
+                            Text(text = " $uvIndex")
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(

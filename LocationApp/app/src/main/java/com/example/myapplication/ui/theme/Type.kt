@@ -15,14 +15,32 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.unit.dp
 
+val AntonRegular = FontFamily(
+    Font(R.font.anton_regular)
+)
+val antonRegular = TextStyle(
+    fontFamily = AntonRegular,
+    fontWeight = FontWeight.Bold,
+    color = Color(0xBF4C76DF),
+    fontSize = 72.sp,
+    lineHeight = 60.sp,
+    letterSpacing = 0.5.sp,
+    shadow = Shadow(
+        color = Color.Black,
+        offset = Offset(4f, 4f),
+        blurRadius = 4f
+    )
+)
+
 val ValeraRound = FontFamily(
-    Font(R.font.valera_round_regular, FontWeight.Normal, FontStyle.Normal)
+    Font(R.font.valera_round_regular, FontWeight.Bold, FontStyle.Normal)
 )
 val valeraRound = TextStyle(
     fontFamily = ValeraRound,
     fontWeight = FontWeight.Bold,
-    fontSize = 55.sp,
-    lineHeight = 22.sp,
+    color = Color(0xFF262547),
+    fontSize = 72.sp,
+    lineHeight = 60.sp,
     letterSpacing = 0.25.sp,
     shadow = Shadow(
         color = Color.Black,
