@@ -53,8 +53,8 @@ fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
                 val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
                 val uvIndex = dailyForecast?.daily?.uvIndexes?.get(index) ?: 0.0
                 val rain = dailyForecast?.daily?.rainSum?.get(index) ?: 0.0
-
-                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex, rain)
+                val wind = dailyForecast?.daily?.maxWind?.get(index) ?: 0.0
+                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex, rain, wind)
         }
     }
 }
@@ -67,7 +67,8 @@ fun WeatherCard(
     minTemperature: Double,
     weatherCode: Int,
     uvIndex: Double,
-    rain: Double
+    rain: Double,
+    wind: Double
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -75,7 +76,7 @@ fun WeatherCard(
         modifier = Modifier
             .padding(8.dp)
             .clickable { expanded = !expanded }
-            .requiredWidth(160.dp)
+            .requiredWidth(168.dp)
     ) {
         Box(modifier = Modifier
             .padding(16.dp)
@@ -134,6 +135,7 @@ fun WeatherCard(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = ": $uvIndex")
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()
@@ -144,7 +146,20 @@ fun WeatherCard(
                                 modifier = Modifier.size(32.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = ": $rain mm")
+                            Text(text = " $rain mm")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.wind),
+                                contentDescription = "Wind Icon",
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = " $wind kmh")
                         }
                     }
                 }

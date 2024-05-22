@@ -21,5 +21,6 @@ data class DailyForecast(
     @SerializedName("temperature_2m_min") val minTemperatures: List<Double>,
     @SerializedName("weather_code") val weatherCodes: List<Int>,
     @SerializedName("uv_index_max") val uvIndexes: List<Double>,
-    @SerializedName("precipitation_sum") val rainSum: List<Double>
+    @SerializedName("precipitation_sum") val rainSum: List<Double>,
+    @SerializedName("wind_speed_10m_max") val maxWind: List<Double>
 )

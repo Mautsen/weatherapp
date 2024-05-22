@@ -51,7 +51,7 @@ class WeatherRepository {
     }
     suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse {
 
-        val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_sum"
+        val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_sum,wind_speed_10m_max"
         val dailyResponse = dailyForecastApi.getDailyForecast(latitude, longitude, dailyParam)
         Log.d("WeatherResponse", "Weather code: ${dailyResponse.daily.weatherCodes}")
         return dailyResponse

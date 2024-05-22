@@ -2,7 +2,10 @@ package com.example.myapplication.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,6 +13,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -26,7 +32,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = LightBlue80,
     //background = Pink80
-    background = LightBlue80
+    background = Color.Transparent
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -64,9 +70,22 @@ fun MyApplicationTheme(
         }
     }
 
+    val gradient = Brush.linearGradient(
+        colors = listOf(Color(0xff6dcee4), Color(0xff4730d8)),
+        start = androidx.compose.ui.geometry.Offset(250f, 0f),
+        end = androidx.compose.ui.geometry.Offset(2500f, 1000f) // Gradient direction
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+        typography = Typography
+    ) {
+        Box(
+            modifier = Modifier
+                .background(gradient)
+                .fillMaxSize()
+        ) {
+            content()
+        }
+    }
 }
