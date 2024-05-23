@@ -126,7 +126,10 @@ fun App() {
                     .padding(top = 8.dp),
                 query = text,
                 onQueryChange = { text = it },
-                onSearch = { active = false },
+                onSearch = {
+                    active = false
+
+                },
                 active = active,
                 onActiveChange = { active = it },
                 placeholder = { Text("Search location") },
@@ -137,12 +140,14 @@ fun App() {
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(2) { id ->
-                        val resultText = "City $id"
+                    items(2) {
+                        val resultText = "Kerava"
+                        val resultText2 = "Valkeakoski"
                         ListItem(
                             modifier = Modifier.clickable {
                                 text = resultText
                                 active = false
+
                             },
                             headlineContent = {
                                 Text(
@@ -164,6 +169,7 @@ fun App() {
                 }
             }
         }
+
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (isDataLoading) {

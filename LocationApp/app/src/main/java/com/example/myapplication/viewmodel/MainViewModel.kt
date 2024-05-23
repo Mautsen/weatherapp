@@ -11,7 +11,10 @@ import com.example.myapplication.model.LocationRepository
 import com.example.myapplication.model.WeatherRepository
 import com.example.myapplication.model.CurrentWeatherResponse
 import com.example.myapplication.model.DailyForecastResponse
+
+
 import kotlinx.coroutines.launch
+
 
 
 /**
@@ -85,6 +88,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+
 }
+
 
 
