@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,8 +33,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Search
@@ -42,6 +45,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
@@ -86,6 +90,7 @@ fun App() {
     var isDataLoading by remember { mutableStateOf(true) }
     val locationState = viewModel.location.observeAsState()
     val weatherState = viewModel.weather.observeAsState()
+    val isCelsius = viewModel.isCelsius.observeAsState(true)
     val dailyForecastState = viewModel.dailyForecast.observeAsState()
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
@@ -96,7 +101,15 @@ fun App() {
 
     val latitude = location?.latitude ?: "Not available"
     val longitude = location?.longitude ?: "Not available"
-    val temperature = weather?.current?.temperature ?: "Not available"
+    val temperature = weather?.current?.temperature ?: 0.0
+    val displayTemperature = if (isCelsius.value) {
+        "${temperature}°C"
+    } else {
+
+        val fahrenheitTemp = temperature * 9.0 / 5.0 + 32.0
+
+        "${fahrenheitTemp}°F"
+    }
     val weatherCode = weather?.current?.weatherCode ?: -1
 
     val imageResId = when (weatherCode) {
@@ -121,48 +134,59 @@ fun App() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.TopCenter
         ) {
-            SearchBar(
-                modifier = Modifier.padding(top = 8.dp),
-                query = text,
-                onQueryChange = { text = it },
-                onSearch = {
-                    active = false
-                },
-                active = active,
-                onActiveChange = { active = it },
-                placeholder = { Text("Search location") },
-                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                SearchBar(
+                    modifier = Modifier.padding(top = 8.dp),
+                    query = text,
+                    onQueryChange = { text = it },
+                    onSearch = {
+                        active = false
+                    },
+                    active = active,
+                    onActiveChange = { active = it },
+                    placeholder = { Text("Search location") },
+                    leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
                 ) {
-                    items(listOf("Valkeakoski", "Kerava", "GPS")) { city ->
-                        ListItem(
-                            modifier = Modifier.clickable {
-                                text = city
-                                active = false
-                                when (city.lowercase()) {
-                                    "valkeakoski" -> viewModel.setCustomLocation(61.2628, 24.0316)
-                                    "kerava" -> viewModel.setCustomLocation(60.4039, 25.1015)
-                                    "gps" -> viewModel.useCurrentLocation()
-                                }
-                            },
-                            headlineContent = {
-                                Text(
-                                    text = city,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            },
-                            supportingContent = {
-                                Text("Select $city")
-                            },
-                            leadingContent = {
-                                Icon(Icons.Rounded.LocationOn, contentDescription = null)
-                            },
-                        )
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(listOf("Valkeakoski", "Kerava", "GPS")) { city ->
+                            ListItem(
+                                modifier = Modifier.clickable {
+                                    text = city
+                                    active = false
+                                    when (city.lowercase()) {
+                                        "valkeakoski" -> viewModel.setCustomLocation(61.2628, 24.0316)
+                                        "kerava" -> viewModel.setCustomLocation(60.4039, 25.1015)
+                                        "gps" -> viewModel.useCurrentLocation()
+                                    }
+                                },
+                                headlineContent = {
+                                    Text(
+                                        text = city,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                },
+                                supportingContent = {
+                                    Text("Select $city")
+                                },
+                                leadingContent = {
+                                    Icon(Icons.Rounded.LocationOn, contentDescription = null)
+                                },
+                            )
+                        }
                     }
+                }
+                IconButton(
+                    onClick = { viewModel.toggleTemperatureUnit() }
+                ) {
+                    Icon(Icons.Default.Face, contentDescription = "Toggle Temperature Unit")
                 }
             }
         }
@@ -178,9 +202,10 @@ fun App() {
                 ) {
                     Spacer(modifier = Modifier.height(40.dp))
                     Text(
-                        text = "${temperature}°C",
+                        text = displayTemperature,
                         style = valeraRound
                     )
+
                     Spacer(modifier = Modifier.height(24.dp))
                     Image(
                         painter = painterResource(id = imageResId),

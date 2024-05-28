@@ -35,6 +35,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _dailyForecast = MutableLiveData<DailyForecastResponse>()
     val dailyForecast: LiveData<DailyForecastResponse> = _dailyForecast
 
+    private val _isCelsius = MutableLiveData(true)
+    val isCelsius: LiveData<Boolean> = _isCelsius
+
     init {
         startLocationUpdates()
     }
@@ -112,5 +115,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun useCurrentLocation() {
         _selectedCity.value = null
         startLocationUpdates()
+    }
+
+    fun toggleTemperatureUnit() {
+        _isCelsius.value = _isCelsius.value != true
     }
 }
