@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.myapplication.R
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -66,7 +67,6 @@ fun App() {
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
-            // Check if all requested permissions have been granted
             val allPermissionsGranted = permissions.entries.all { it.value }
             if (allPermissionsGranted) {
                 viewModel.startLocationUpdates()
@@ -75,10 +75,12 @@ fun App() {
     )
 
     LaunchedEffect(Unit) {
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 
     var isDataLoading by remember { mutableStateOf(true) }
@@ -108,8 +110,6 @@ fun App() {
         else -> R.drawable.default_image
     }
 
-    // isDataLoading is true if location or weather are null
-    // It's false if they are not null so the data has loaded
     LaunchedEffect(location, weather) {
         isDataLoading = location == null || weather == null || dailyForecast == null
     }
@@ -122,13 +122,11 @@ fun App() {
             contentAlignment = Alignment.TopCenter
         ) {
             SearchBar(
-                modifier = Modifier
-                    .padding(top = 8.dp),
+                modifier = Modifier.padding(top = 8.dp),
                 query = text,
                 onQueryChange = { text = it },
                 onSearch = {
                     active = false
-
                 },
                 active = active,
                 onActiveChange = { active = it },
@@ -140,29 +138,28 @@ fun App() {
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(2) {
-                        val resultText = "Kerava"
-                        val resultText2 = "Valkeakoski"
+                    items(listOf("Valkeakoski", "Kerava", "GPS")) { city ->
                         ListItem(
                             modifier = Modifier.clickable {
-                                text = resultText
+                                text = city
                                 active = false
-
+                                when (city.lowercase()) {
+                                    "valkeakoski" -> viewModel.setCustomLocation(61.2628, 24.0316)
+                                    "kerava" -> viewModel.setCustomLocation(60.4039, 25.1015)
+                                    "gps" -> viewModel.useCurrentLocation()
+                                }
                             },
                             headlineContent = {
                                 Text(
-                                    text = resultText,
+                                    text = city,
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
                             supportingContent = {
-                                Text("Small text here, delete if unnecessary")
+                                Text("Select $city")
                             },
                             leadingContent = {
-                                Icon(
-                                    Icons.Rounded.LocationOn,
-                                    contentDescription = null
-                                )
+                                Icon(Icons.Rounded.LocationOn, contentDescription = null)
                             },
                         )
                     }
@@ -170,10 +167,9 @@ fun App() {
             }
         }
 
-
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (isDataLoading) {
-                CircularProgressIndicator() // This gets called if isDataLoading is true
+                CircularProgressIndicator()
             } else {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -188,13 +184,12 @@ fun App() {
                     Spacer(modifier = Modifier.height(24.dp))
                     Image(
                         painter = painterResource(id = imageResId),
-                        contentDescription = "My Image",
+                        contentDescription = "Weather Image",
                         modifier = Modifier.size(120.dp)
                     )
                     Spacer(modifier = Modifier.height(40.dp))
                     DailyForecastComponent(dailyForecast)
                 }
-
             }
         }
     }

@@ -11,11 +11,7 @@ import com.example.myapplication.model.LocationRepository
 import com.example.myapplication.model.WeatherRepository
 import com.example.myapplication.model.CurrentWeatherResponse
 import com.example.myapplication.model.DailyForecastResponse
-
-
 import kotlinx.coroutines.launch
-
-
 
 /**
  * ViewModel class for the main view of the application, responsible for the background logic.
@@ -27,9 +23,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val locationRepository = LocationRepository(application)
     private val weatherRepository = WeatherRepository()
 
-    // LiveData variables for location, current weather, and daily forecast
     private val _location = MutableLiveData<Location?>()
     val location: LiveData<Location?> = _location
+
+    private val _selectedCity = MutableLiveData<String?>()
+    val selectedCity: LiveData<String?> = _selectedCity
 
     private val _weather = MutableLiveData<CurrentWeatherResponse>()
     val weather: LiveData<CurrentWeatherResponse> = _weather
@@ -42,21 +40,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Starts location updates and triggers fetching weather and daily forecast.
+     * Starts location updates using the LocationRepository.
+     * If no city is selected, updates the current location and fetches the weather data.
      */
     fun startLocationUpdates() {
         locationRepository.startLocationUpdates { location ->
-            _location.value = location
-            Log.i("MainViewModel", "Received location: $location")
-            fetchWeather(location)
-            fetchDailyForecast(location)
+            if (_selectedCity.value == null) {
+                _location.value = location
+                fetchWeather(location)
+                fetchDailyForecast(location)
+            }
         }
     }
 
     /**
-     * Fetches weather based on location.
+     * Fetches the current weather data for the given location.
      *
-     * @param location The location from which to fetch the weather.
+     * @param location The location for which to fetch weather data.
      */
     private fun fetchWeather(location: Location?) {
         location?.let { loc ->
@@ -72,9 +72,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Fetches daily forecast based on location.
+     * Fetches the daily forecast data for the given location.
      *
-     * @param location The location from which to fetch the daily forecast.
+     * @param location The location for which to fetch daily forecast data.
      */
     private fun fetchDailyForecast(location: Location?) {
         location?.let { loc ->
@@ -89,8 +89,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Sets a custom location and fetches the weather and daily forecast data for it.
+     *
+     * @param lat The latitude of the custom location.
+     * @param lon The longitude of the custom location.
+     */
+    fun setCustomLocation(lat: Double, lon: Double) {
+        val location = Location("").apply {
+            latitude = lat
+            longitude = lon
+        }
+        _location.value = location
+        _selectedCity.value = "Custom"
+        fetchWeather(location)
+        fetchDailyForecast(location)
+    }
 
+    /**
+     * Uses the current GPS location by clearing the selected city and starting location updates.
+     */
+    fun useCurrentLocation() {
+        _selectedCity.value = null
+        startLocationUpdates()
+    }
 }
-
-
-
