@@ -44,25 +44,42 @@ import java.time.format.TextStyle
 import java.util.Locale
 import com.example.myapplication.ui.theme.gradientBackground
 
+/**
+ * A composable function that displays a horizontal list of daily weather forecasts.
+ *
+ * @param dailyForecast The daily forecast data to be displayed.
+ */
 @Composable
 fun DailyForecastComponent(dailyForecast: DailyForecastResponse?) {
     LazyRow {
         items(dailyForecast?.daily?.time ?: emptyList()) { dateString ->
-                val date = LocalDate.parse(dateString)
-                val formattedDate = date.format(DateTimeFormatter.ofPattern("d.M."))
-                val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                val index = dailyForecast?.daily?.time?.indexOf(dateString) ?: 0
-                val maxTemperature = dailyForecast?.daily?.maxTemperatures?.get(index) ?: 0.0
-                val minTemperature = dailyForecast?.daily?.minTemperatures?.get(index) ?: 0.0
-                val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
-                val uvIndex = dailyForecast?.daily?.uvIndexes?.get(index) ?: 0.0
-                val rain = dailyForecast?.daily?.rainSum?.get(index) ?: 0.0
-                val wind = dailyForecast?.daily?.maxWind?.get(index) ?: 0.0
-                WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex, rain, wind)
+            val date = LocalDate.parse(dateString)
+            val formattedDate = date.format(DateTimeFormatter.ofPattern("d.M."))
+            val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            val index = dailyForecast?.daily?.time?.indexOf(dateString) ?: 0
+            val maxTemperature = dailyForecast?.daily?.maxTemperatures?.get(index) ?: 0.0
+            val minTemperature = dailyForecast?.daily?.minTemperatures?.get(index) ?: 0.0
+            val weatherCode = dailyForecast?.daily?.weatherCodes?.get(index) ?: 0
+            val uvIndex = dailyForecast?.daily?.uvIndexes?.get(index) ?: 0.0
+            val rain = dailyForecast?.daily?.rainSum?.get(index) ?: 0.0
+            val wind = dailyForecast?.daily?.maxWind?.get(index) ?: 0.0
+            WeatherCard(dayOfWeek, formattedDate, maxTemperature, minTemperature, weatherCode, uvIndex, rain, wind)
         }
     }
 }
 
+/**
+ * A composable function that displays a weather card with detailed weather information.
+ *
+ * @param dayOfWeek The day of the week.
+ * @param formattedDate The formatted date.
+ * @param maxTemperature The maximum temperature of the day.
+ * @param minTemperature The minimum temperature of the day.
+ * @param weatherCode The weather code representing the weather condition.
+ * @param uvIndex The UV index of the day.
+ * @param rain The amount of rainfall in millimeters.
+ * @param wind The maximum wind speed in kilometers per hour.
+ */
 @Composable
 fun WeatherCard(
     dayOfWeek: String,
@@ -88,7 +105,6 @@ fun WeatherCard(
         Box(modifier = Modifier
             .gradientBackground()
             .padding(16.dp)
-            //.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier

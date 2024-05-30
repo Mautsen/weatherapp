@@ -117,6 +117,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         startLocationUpdates()
     }
 
+    /**
+     * Toggles the temperature units between Fahrenheit and Celsius.
+     *
+     * This function inverts the current state of the `_isCelsius` LiveData, switching between
+     * `true` (Celsius) and `false` (Fahrenheit). It is typically called when the user wants to
+     * change the temperature unit displayed in the application.
+     */
     fun toggleTemperatureUnit() {
         _isCelsius.value = _isCelsius.value != true
     }

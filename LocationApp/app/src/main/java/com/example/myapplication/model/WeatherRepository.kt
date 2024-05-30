@@ -5,10 +5,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import android.location.Location
 
-
+/**
+ * Interface for fetching current weather data from Open Meteo API.
+ */
 interface OpenMeteoApi {
+    /**
+     * Fetches current weather data.
+     *
+     * @param latitude The latitude of the location.
+     * @param longitude The longitude of the location.
+     * @param current The current weather parameters to fetch.
+     * @param timezone The timezone for the weather data (default is "auto").
+     * @return A [CurrentWeatherResponse] containing the current weather data.
+     */
     @GET("v1/forecast")
     suspend fun getWeather(
         @Query("latitude") latitude: Double,
@@ -17,8 +27,20 @@ interface OpenMeteoApi {
         @Query("timezone") timezone: String = "auto"
     ): CurrentWeatherResponse
 }
-// interface for 7 day forecast
+
+/**
+ * Interface for fetching daily forecast data from Open Meteo API.
+ */
 interface DailyForecastApi {
+    /**
+     * Fetches daily forecast data for 7 days.
+     *
+     * @param latitude The latitude of the location.
+     * @param longitude The longitude of the location.
+     * @param daily The daily forecast parameters to fetch.
+     * @param timezone The timezone for the weather data (default is "auto").
+     * @return A [DailyForecastResponse] containing the daily forecast data.
+     */
     @GET("v1/forecast")
     suspend fun getDailyForecast(
         @Query("latitude") latitude: Double,
@@ -28,6 +50,9 @@ interface DailyForecastApi {
     ): DailyForecastResponse
 }
 
+/**
+ * Repository class for handling weather data retrieval from Open Meteo API.
+ */
 class WeatherRepository {
     private val openMeteoApi: OpenMeteoApi
     private val dailyForecastApi: DailyForecastApi
@@ -42,6 +67,13 @@ class WeatherRepository {
         dailyForecastApi = retrofit.create(DailyForecastApi::class.java)
     }
 
+    /**
+     * Fetches the current weather for the given latitude and longitude.
+     *
+     * @param latitude The latitude of the location.
+     * @param longitude The longitude of the location.
+     * @return A [CurrentWeatherResponse] containing the current weather data.
+     */
     suspend fun getWeather(latitude: Double, longitude: Double): CurrentWeatherResponse {
         val currentParam = "temperature_2m,weather_code"
         val weatherResponse = openMeteoApi.getWeather(latitude, longitude, currentParam)
@@ -49,14 +81,18 @@ class WeatherRepository {
         Log.d("WeatherResponse", "Current temperature: ${weatherResponse.current.temperature}")
         return weatherResponse
     }
-    suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse {
 
+    /**
+     * Fetches the daily weather forecast for the given latitude and longitude.
+     *
+     * @param latitude The latitude of the location.
+     * @param longitude The longitude of the location.
+     * @return A [DailyForecastResponse] containing the daily forecast data.
+     */
+    suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse {
         val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_sum,wind_speed_10m_max"
         val dailyResponse = dailyForecastApi.getDailyForecast(latitude, longitude, dailyParam)
         Log.d("WeatherResponse", "Weather code: ${dailyResponse.daily.weatherCodes}")
         return dailyResponse
     }
-
-
 }
-

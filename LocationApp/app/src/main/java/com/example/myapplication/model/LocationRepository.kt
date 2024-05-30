@@ -7,15 +7,24 @@ import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
-
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 
-
+/**
+ * A repository class for handling location updates.
+ *
+ * @property context The context used to access system services.
+ */
 class LocationRepository(private val context: Context) {
+
+    /**
+     * Starts location updates if the required permissions are granted.
+     *
+     * @param callback A callback function to handle the location updates.
+     */
     fun startLocationUpdates(callback: (Location?) -> Unit) {
         // Check if location permissions are granted
         if (ContextCompat.checkSelfPermission(
