@@ -3,6 +3,7 @@ import com.android.build.api.dsl.Packaging
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 android {
@@ -78,6 +79,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")// ViewModel support for Compose
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
     implementation("androidx.compose.material3:material3:1.2.1")
-
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.20")
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.20")
 
 }
