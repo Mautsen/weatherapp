@@ -43,6 +43,8 @@ The WeatherApp provides users with the following features:
 
 ## Screencast
 
+https://youtu.be/Icda_z26r_0
+
 ## License
 
 MIT © 2024 Matias Leppänen
