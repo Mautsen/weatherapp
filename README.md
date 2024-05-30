@@ -6,10 +6,6 @@ This app provides users with weather information based on their location. Users 
 
 WeatherApp was created as a part of a Mobile Development-course. The goal was to create a mobile application for Android using Kotlin. The WeatherApp was created to provide users with up-to-date weather information.
 
-## Screenshots
-
-[Insert screenshots here]
-
 ## Tech used
 
 ### Frontend:
