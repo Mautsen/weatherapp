@@ -2,10 +2,13 @@ package com.example.myapplication.composables
 
 import DailyForecastComponent
 import android.Manifest
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,37 +35,40 @@ import com.example.myapplication.R
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.LocationOn
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Colors
 import com.example.myapplication.ui.theme.Typography
 import com.example.myapplication.ui.theme.antonRegular
+import com.example.myapplication.ui.theme.gradientBackground
 import com.example.myapplication.ui.theme.valeraRound
 
 
+
+@SuppressLint("DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
@@ -105,10 +111,10 @@ fun App() {
     val displayTemperature = if (isCelsius.value) {
         "${temperature}°C"
     } else {
-
         val fahrenheitTemp = temperature * 9.0 / 5.0 + 32.0
+        val formattedFahrenheit = String.format("%.1f°F", fahrenheitTemp)
 
-        "${fahrenheitTemp}°F"
+        formattedFahrenheit
     }
     val weatherCode = weather?.current?.weatherCode ?: -1
 
@@ -128,68 +134,81 @@ fun App() {
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Location: $latitude, $longitude")
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+            SearchBar(
+                modifier = Modifier.weight(1f).padding(end = 8.dp),
+                query = text,
+                onQueryChange = { text = it },
+                onSearch = { active = false },
+                active = active,
+                onActiveChange = { active = it },
+                placeholder = { Text("Search location") },
+                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+
             ) {
-                SearchBar(
-                    modifier = Modifier.padding(top = 8.dp),
-                    query = text,
-                    onQueryChange = { text = it },
-                    onSearch = {
-                        active = false
-                    },
-                    active = active,
-                    onActiveChange = { active = it },
-                    placeholder = { Text("Search location") },
-                    leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        items(listOf("Valkeakoski", "Kerava", "GPS")) { city ->
-                            ListItem(
-                                modifier = Modifier.clickable {
-                                    text = city
-                                    active = false
-                                    when (city.lowercase()) {
-                                        "valkeakoski" -> viewModel.setCustomLocation(61.2628, 24.0316)
-                                        "kerava" -> viewModel.setCustomLocation(60.4039, 25.1015)
-                                        "gps" -> viewModel.useCurrentLocation()
-                                    }
-                                },
-                                headlineContent = {
-                                    Text(
-                                        text = city,
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                },
-                                supportingContent = {
-                                    Text("Select $city")
-                                },
-                                leadingContent = {
-                                    Icon(Icons.Rounded.LocationOn, contentDescription = null)
-                                },
-                            )
-                        }
+                    items(listOf("Valkeakoski", "Kerava", "GPS")) { city ->
+                        ListItem(
+                            modifier = Modifier.clickable {
+                                text = city
+                                active = false
+                                when (city.lowercase()) {
+                                    "valkeakoski" -> viewModel.setCustomLocation(61.2628, 24.0316)
+                                    "kerava" -> viewModel.setCustomLocation(60.4039, 25.1015)
+                                    "gps" -> viewModel.useCurrentLocation()
+                                }
+                            },
+                            headlineContent = {
+                                Text(
+                                    text = city,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            },
+                            supportingContent = {
+                                Text("Select $city")
+                            },
+                            leadingContent = {
+                                Icon(Icons.Rounded.LocationOn, contentDescription = null)
+                            },
+                        )
                     }
                 }
-                IconButton(
-                    onClick = { viewModel.toggleTemperatureUnit() }
+            }
+
+            Button(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                onClick = { viewModel.toggleTemperatureUnit() },
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(12.dp),
+
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .gradientBackground()
+                        .size(width = 54.dp, height = 48.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Default.Face, contentDescription = "Toggle Temperature Unit")
+                    Text(
+                        text = if (isCelsius.value) "°F" else "°C",
+                        color = Color(0xFF262547),
+                        fontWeight = FontWeight.Bold,
+                        style = TextStyle(fontSize = 20.sp),
+                    )
                 }
             }
         }
+
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             if (isDataLoading) {
