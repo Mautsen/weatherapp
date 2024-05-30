@@ -5,6 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.IOException
 
 /**
  * Interface for fetching current weather data from Open Meteo API.
@@ -72,14 +73,22 @@ class WeatherRepository {
      *
      * @param latitude The latitude of the location.
      * @param longitude The longitude of the location.
-     * @return A [CurrentWeatherResponse] containing the current weather data.
+     * @return A [CurrentWeatherResponse] containing the current weather data, or null if an error occurs.
      */
-    suspend fun getWeather(latitude: Double, longitude: Double): CurrentWeatherResponse {
-        val currentParam = "temperature_2m,weather_code"
-        val weatherResponse = openMeteoApi.getWeather(latitude, longitude, currentParam)
-        Log.d("WeatherResponse", "Weather code: ${weatherResponse.current.weatherCode}")
-        Log.d("WeatherResponse", "Current temperature: ${weatherResponse.current.temperature}")
-        return weatherResponse
+    suspend fun getWeather(latitude: Double, longitude: Double): CurrentWeatherResponse? {
+        return try {
+            val currentParam = "temperature_2m,weather_code"
+            val weatherResponse = openMeteoApi.getWeather(latitude, longitude, currentParam)
+            Log.d("WeatherResponse", "Weather code: ${weatherResponse.current.weatherCode}")
+            Log.d("WeatherResponse", "Current temperature: ${weatherResponse.current.temperature}")
+            weatherResponse
+        } catch (e: IOException) {
+            Log.e("WeatherRepository", "Network error while fetching current weather", e)
+            null
+        } catch (e: Exception) {
+            Log.e("WeatherRepository", "Error while fetching current weather", e)
+            null
+        }
     }
 
     /**
@@ -87,12 +96,20 @@ class WeatherRepository {
      *
      * @param latitude The latitude of the location.
      * @param longitude The longitude of the location.
-     * @return A [DailyForecastResponse] containing the daily forecast data.
+     * @return A [DailyForecastResponse] containing the daily forecast data, or null if an error occurs.
      */
-    suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse {
-        val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_sum,wind_speed_10m_max"
-        val dailyResponse = dailyForecastApi.getDailyForecast(latitude, longitude, dailyParam)
-        Log.d("WeatherResponse", "Weather code: ${dailyResponse.daily.weatherCodes}")
-        return dailyResponse
+    suspend fun getDailyForecast(latitude: Double, longitude: Double): DailyForecastResponse? {
+        return try {
+            val dailyParam = "temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_sum,wind_speed_10m_max"
+            val dailyResponse = dailyForecastApi.getDailyForecast(latitude, longitude, dailyParam)
+            Log.d("WeatherResponse", "Weather code: ${dailyResponse.daily.weatherCodes}")
+            dailyResponse
+        } catch (e: IOException) {
+            Log.e("WeatherRepository", "Network error while fetching daily forecast", e)
+            null
+        } catch (e: Exception) {
+            Log.e("WeatherRepository", "Error while fetching daily forecast", e)
+            null
+        }
     }
 }

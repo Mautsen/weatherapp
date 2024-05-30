@@ -29,11 +29,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedCity = MutableLiveData<String?>()
     val selectedCity: LiveData<String?> = _selectedCity
 
-    private val _weather = MutableLiveData<CurrentWeatherResponse>()
-    val weather: LiveData<CurrentWeatherResponse> = _weather
+    private val _weather = MutableLiveData<CurrentWeatherResponse?>()
+    val weather: MutableLiveData<CurrentWeatherResponse?> = _weather
 
-    private val _dailyForecast = MutableLiveData<DailyForecastResponse>()
-    val dailyForecast: LiveData<DailyForecastResponse> = _dailyForecast
+    private val _dailyForecast = MutableLiveData<DailyForecastResponse?>()
+    val dailyForecast: MutableLiveData<DailyForecastResponse?> = _dailyForecast
 
     private val _isCelsius = MutableLiveData(true)
     val isCelsius: LiveData<Boolean> = _isCelsius
