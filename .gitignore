@@ -1,7 +1,6 @@
 # Gradle files
 .gradle/
 build/
-!/build/outputs/**.apk
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -31,3 +30,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Allow APK files in the build directory
+!/build/outputs/**.apk
+
