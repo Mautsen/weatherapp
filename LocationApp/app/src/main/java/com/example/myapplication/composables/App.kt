@@ -203,7 +203,7 @@ fun App() {
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(40.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = displayTemperature,
                         style = valeraRound
